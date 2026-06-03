@@ -4,7 +4,7 @@ A tiny Claude Code plugin that notices when you're working past midnight,
 nudges you to get some sleep, and saves a handoff summary so you can stop now
 and pick up tomorrow without re-discovering everything.
 
-Two pieces:
+Three pieces:
 
 - **`late-check` hook** (`UserPromptSubmit`) — checks the local clock on each
   prompt. Inside the late-night window it injects a one-line reminder telling
@@ -13,6 +13,9 @@ Two pieces:
 - **`/goodnight` skill** — writes a dated handoff summary to
   `.nightowl/handoff-YYYY-MM-DD.md` *and* prints it in chat: what you did, where
   you left off (file:line), open next steps, gotchas, and the command to resume.
+- **`/goodmorning` skill** — the counterpart: loads the latest handoff,
+  re-grounds it against current git state (flagging anything that changed
+  overnight), and tees up the next step so you start oriented.
 
 ## How it works
 
@@ -21,8 +24,9 @@ timezone — no config needed. State for throttling lives in
 `$TMPDIR/nightowl-last-nag` (just a timestamp). The hook never blocks or fails
 your prompt: on any error it exits cleanly and your request goes through.
 
-The `/goodnight` summary is written under `.nightowl/` in the current project,
-which is git-ignored by default.
+The `/goodnight` summary is written under `.nightowl/` in the current project
+(git-ignored by default). `/goodmorning` reads the newest `handoff-*.md` back
+out of that folder, so the two commands share one on-disk handoff per day.
 
 ## Install
 
@@ -47,10 +51,11 @@ git clone https://github.com/tkrisztian95/nightowl-claude-plugin.git
 cd nightowl-claude-plugin
 ```
 
-1. **Skill** — copy the skill so Claude can find it:
+1. **Skills** — copy both skills so Claude can find them:
 
    ```bash
    cp -r skills/goodnight ~/.claude/skills/goodnight
+   cp -r skills/goodmorning ~/.claude/skills/goodmorning
    ```
 
 2. **Hook** — add the hook to `~/.claude/settings.json`, pointing at the
