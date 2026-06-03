@@ -1,0 +1,14 @@
+{
+  "name": "nightowl",
+  "owner": {
+    "name": "Krisztian Toth",
+    "email": "ktothdev@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "nightowl",
+      "source": "./",
+      "description": "Late-night nudge for Claude Code: warns when you work past midnight and saves a /goodnight handoff summary to resume tomorrow."
+    }
+  ]
+}

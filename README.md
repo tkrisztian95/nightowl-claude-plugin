@@ -18,23 +18,33 @@ Two pieces:
 
 ### As a plugin (recommended)
 
-From a marketplace that includes this repo:
+This repo is its own Claude Code plugin marketplace. Add it, then install:
 
 ```
-/plugin install nightowl
+/plugin marketplace add tkrisztian95/nightowl-claude-plugin
+/plugin install nightowl@nightowl
 ```
 
-Or point Claude Code at a local marketplace containing this folder.
+(`nightowl@nightowl` = the `nightowl` plugin from the `nightowl` marketplace.)
+Update later with `/plugin marketplace update nightowl`.
 
 ### Manual (no marketplace)
+
+Clone the repo somewhere, then wire up the two pieces:
+
+```bash
+git clone https://github.com/tkrisztian95/nightowl-claude-plugin.git
+cd nightowl-claude-plugin
+```
 
 1. **Skill** — copy the skill so Claude can find it:
 
    ```bash
-   cp -r ~/Git/personal/nightowl/skills/goodnight ~/.claude/skills/goodnight
+   cp -r skills/goodnight ~/.claude/skills/goodnight
    ```
 
-2. **Hook** — add the hook to `~/.claude/settings.json`:
+2. **Hook** — add the hook to `~/.claude/settings.json`, pointing at the
+   absolute path where you cloned it:
 
    ```json
    {
@@ -44,7 +54,7 @@ Or point Claude Code at a local marketplace containing this folder.
            "hooks": [
              {
                "type": "command",
-               "command": "bash \"$HOME/Git/personal/nightowl/hooks/late-check.sh\""
+               "command": "bash \"/absolute/path/to/nightowl-claude-plugin/hooks/late-check.sh\""
              }
            ]
          }
