@@ -8,7 +8,7 @@
     {
       "name": "nightowl",
       "source": "./",
-      "description": "Late-night nudge for Claude Code: warns when you work past midnight, saves a /goodnight handoff, and resumes it with /goodmorning."
+      "description": "Late-night nudge for Claude Code: warns when you work late at night, saves a /goodnight handoff, and resumes it with /goodmorning."
     }
   ]
 }

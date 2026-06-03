@@ -13,7 +13,7 @@ cat >/dev/null 2>&1 || true
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # --- config (override via env) ---------------------------------------------
-START="${NIGHTOWL_START:-0}"        # window start hour (00 = midnight)
+START="${NIGHTOWL_START:-23}"       # window start hour (23 = 11pm)
 END="${NIGHTOWL_END:-6}"            # window end hour, exclusive (06 = 6am)
 THROTTLE_MIN="${NIGHTOWL_THROTTLE_MIN:-30}"   # min minutes between nags
 TEMPLATE="${NIGHTOWL_TEMPLATE:-$SCRIPT_DIR/reminder.tmpl}"  # prompt template

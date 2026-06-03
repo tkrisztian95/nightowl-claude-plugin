@@ -1,6 +1,6 @@
 # 🦉 nightowl
 
-A tiny Claude Code plugin that notices when you're working past midnight,
+A tiny Claude Code plugin that notices when you're working late at night,
 nudges you to get some sleep, and saves a handoff summary so you can stop now
 and pick up tomorrow without re-discovering everything.
 
@@ -95,7 +95,7 @@ Override via environment variables (defaults shown):
 
 | Var | Default | Meaning |
 | --- | --- | --- |
-| `NIGHTOWL_START` | `0` | Window start hour (24h). `0` = midnight. |
+| `NIGHTOWL_START` | `23` | Window start hour (24h). `23` = 11pm. |
 | `NIGHTOWL_END` | `6` | Window end hour, exclusive. `6` = 6am. |
 | `NIGHTOWL_THROTTLE_MIN` | `30` | Minimum minutes between nags. |
 | `NIGHTOWL_TEMPLATE` | `hooks/reminder.tmpl` | Path to the reminder template. |
