@@ -89,5 +89,27 @@ Override via environment variables (defaults shown):
 | `NIGHTOWL_START` | `0` | Window start hour (24h). `0` = midnight. |
 | `NIGHTOWL_END` | `6` | Window end hour, exclusive. `6` = 6am. |
 | `NIGHTOWL_THROTTLE_MIN` | `30` | Minimum minutes between nags. |
+| `NIGHTOWL_TEMPLATE` | `hooks/reminder.tmpl` | Path to the reminder template. |
 
 Wrap-around windows work: `NIGHTOWL_START=22 NIGHTOWL_END=5` covers 10pm–5am.
+
+## The reminder template
+
+The nudge wording lives in [`hooks/reminder.tmpl`](hooks/reminder.tmpl), not in
+the shell script. The hook renders it with a tiny pure-bash engine that replaces
+`{{KEY}}` placeholders — currently just `{{CLOCK}}` (the local `HH:MM`). Edit the
+template to change the tone; no code change needed. The user's prompt is never
+read into the template, so there's no injection surface beyond the file itself.
+
+## Development
+
+Lint and test (only `bash` + `shellcheck` needed — no bats):
+
+```bash
+shellcheck hooks/late-check.sh tests/late-check.test.sh
+bash tests/late-check.test.sh
+```
+
+The suite pins the clock via the `NIGHTOWL_FAKE_HOUR` / `NIGHTOWL_FAKE_NOW` test
+seams, so window, wrap-around, and throttle logic are deterministic without
+waiting for real time.

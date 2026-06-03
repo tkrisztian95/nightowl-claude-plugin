@@ -1,22 +1,44 @@
 #!/usr/bin/env bash
 # nightowl late-check hook (UserPromptSubmit).
-# If the local clock is inside the "late night" window, inject a gentle
-# reminder asking Claude to suggest wrapping up and offer /goodnight.
-# Throttled so it nags at most once per window per N minutes.
+# If the local clock is inside the "late night" window, render the reminder
+# template and inject it so Claude suggests wrapping up and offers /goodnight.
+# Throttled so it nags at most once per N minutes.
 
 set -euo pipefail
 
 # Drain stdin (the hook payload) so the pipe never blocks. We don't need it.
 cat >/dev/null 2>&1 || true
 
+# Resolve our own directory so the template is found regardless of cwd.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # --- config (override via env) ---------------------------------------------
 START="${NIGHTOWL_START:-0}"        # window start hour (00 = midnight)
 END="${NIGHTOWL_END:-6}"            # window end hour, exclusive (06 = 6am)
 THROTTLE_MIN="${NIGHTOWL_THROTTLE_MIN:-30}"   # min minutes between nags
+TEMPLATE="${NIGHTOWL_TEMPLATE:-$SCRIPT_DIR/reminder.tmpl}"  # prompt template
 # ---------------------------------------------------------------------------
 
-hour=$(date +%-H)   # 0-23, no leading zero
-now=$(date +%s)
+# Minimal template engine: read a template file and replace every {{KEY}}
+# with the value from the KEY=VALUE pairs passed after the path. Pure bash,
+# no external deps — keeps the prompt copy out of this script.
+render_template() {
+  local file="$1"; shift
+  [ -f "$file" ] || return 1
+  local content pair key val
+  content="$(cat "$file")"
+  for pair in "$@"; do
+    key="${pair%%=*}"
+    val="${pair#*=}"
+    content="${content//\{\{$key\}\}/$val}"
+  done
+  printf '%s\n' "$content"
+}
+
+# NIGHTOWL_FAKE_HOUR / NIGHTOWL_FAKE_NOW are test seams: they let the suite pin
+# the clock deterministically. In normal use they are unset and we read `date`.
+hour="${NIGHTOWL_FAKE_HOUR:-$(date +%-H)}"   # 0-23, no leading zero
+now="${NIGHTOWL_FAKE_NOW:-$(date +%s)}"
 
 # Is `hour` inside [START, END)? Handles wrap-around (e.g. 22 -> 5).
 in_window() {
@@ -38,18 +60,13 @@ if [ -f "$state" ]; then
     exit 0
   fi
 fi
-echo "$now" > "$state"
 
 clock=$(date +%H:%M)
 
-# Anything printed to stdout on exit 0 is injected as context for the turn.
-cat <<EOF
-<nightowl-reminder>
-It is ${clock} — inside the user's late-night window. Before diving into the
-request, add ONE short, friendly line suggesting they consider wrapping up and
-continuing tomorrow, and mention they can run /goodnight to save a handoff
-summary. Keep it to a single sentence, do not lecture, then proceed normally
-with their actual request. (This reminder is rate-limited; do not repeat it if
-you have already nudged recently.)
-</nightowl-reminder>
-EOF
+# Render the reminder; only mark the throttle once we have output to show.
+# A missing/unreadable template must never break the user's prompt.
+if rendered=$(render_template "$TEMPLATE" "CLOCK=$clock"); then
+  echo "$now" > "$state"
+  # Anything printed to stdout on exit 0 is injected as context for the turn.
+  printf '%s\n' "$rendered"
+fi
