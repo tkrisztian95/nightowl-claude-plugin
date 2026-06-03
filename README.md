@@ -14,6 +14,16 @@ Two pieces:
   `.nightowl/handoff-YYYY-MM-DD.md` *and* prints it in chat: what you did, where
   you left off (file:line), open next steps, gotchas, and the command to resume.
 
+## How it works
+
+The hook reads the system clock with `date`, so it follows your machine's local
+timezone — no config needed. State for throttling lives in
+`$TMPDIR/nightowl-last-nag` (just a timestamp). The hook never blocks or fails
+your prompt: on any error it exits cleanly and your request goes through.
+
+The `/goodnight` summary is written under `.nightowl/` in the current project,
+which is git-ignored by default.
+
 ## Install
 
 ### As a plugin (recommended)
@@ -76,13 +86,3 @@ Override via environment variables (defaults shown):
 | `NIGHTOWL_THROTTLE_MIN` | `30` | Minimum minutes between nags. |
 
 Wrap-around windows work: `NIGHTOWL_START=22 NIGHTOWL_END=5` covers 10pm–5am.
-
-## How it works
-
-The hook reads the system clock with `date`, so it follows your machine's local
-timezone — no config needed. State for throttling lives in
-`$TMPDIR/nightowl-last-nag` (just a timestamp). The hook never blocks or fails
-your prompt: on any error it exits cleanly and your request goes through.
-
-The `/goodnight` summary is written under `.nightowl/` in the current project,
-which is git-ignored by default.
