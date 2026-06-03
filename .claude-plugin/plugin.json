@@ -1,0 +1,10 @@
+{
+  "name": "nightowl",
+  "version": "0.1.0",
+  "description": "Late-night nudge for Claude Code. Warns when you're working past midnight and helps you save a handoff summary so you can pick up tomorrow.",
+  "author": {
+    "name": "Krisztian Toth",
+    "email": "ktothdev@gmail.com"
+  },
+  "hooks": "./hooks/hooks.json"
+}
