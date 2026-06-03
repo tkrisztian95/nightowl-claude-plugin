@@ -101,15 +101,58 @@ the shell script. The hook renders it with a tiny pure-bash engine that replaces
 template to change the tone; no code change needed. The user's prompt is never
 read into the template, so there's no injection surface beyond the file itself.
 
+## Statusline owl (optional)
+
+A 🦉 badge can appear in the status line under the Claude Code input while it's
+late — a passive companion to the hook's active nudge.
+
+**This is opt-in and manually wired.** Claude Code's `statusLine` is a single,
+user-owned setting; a plugin can ship the script but cannot claim the slot for
+you. (A statusLine command also doesn't receive `${CLAUDE_PLUGIN_ROOT}`, so use
+an absolute path to the script.)
+
+The script is **composable** — point it at whatever status line you already run
+via `NIGHTOWL_BASE_STATUSLINE` and the owl is prepended without replacing it.
+
+**If you have no status line yet**, add to `settings.json`:
+
+```json
+{
+  "statusLine": {
+    "type": "command",
+    "command": "bash \"/absolute/path/to/nightowl-claude-plugin/statusline/nightowl-statusline.sh\""
+  }
+}
+```
+
+**If you already have one** (ruflo, caveman, a custom script), keep it by passing
+it through. Set `NIGHTOWL_BASE_STATUSLINE` to your existing command and point
+`statusLine` at the owl wrapper:
+
+```json
+{
+  "statusLine": {
+    "type": "command",
+    "command": "NIGHTOWL_BASE_STATUSLINE='<your existing statusLine command>' bash \"/absolute/path/to/nightowl-claude-plugin/statusline/nightowl-statusline.sh\""
+  }
+}
+```
+
+The wrapper forwards Claude's session JSON (stdin) to the base command, so your
+existing dashboard renders exactly as before — with the owl in front when late.
+Customize the badge with `NIGHTOWL_BADGE` (default `🦉 late night · /goodnight`).
+Window vars (`NIGHTOWL_START` / `NIGHTOWL_END`) are shared with the hook.
+
 ## Development
 
 Lint and test (only `bash` + `shellcheck` needed — no bats):
 
 ```bash
-shellcheck hooks/late-check.sh tests/late-check.test.sh
+shellcheck hooks/late-check.sh statusline/nightowl-statusline.sh tests/*.sh
 bash tests/late-check.test.sh
+bash tests/statusline.test.sh
 ```
 
-The suite pins the clock via the `NIGHTOWL_FAKE_HOUR` / `NIGHTOWL_FAKE_NOW` test
+The suites pin the clock via the `NIGHTOWL_FAKE_HOUR` / `NIGHTOWL_FAKE_NOW` test
 seams, so window, wrap-around, and throttle logic are deterministic without
 waiting for real time.
