@@ -17,6 +17,15 @@ Three pieces:
   re-grounds it against current git state (flagging anything that changed
   overnight), and tees up the next step so you start oriented.
 
+## Requirements
+
+The hook and statusline are POSIX shell scripts (`bash`), so they run on
+**macOS and Linux** out of the box. **Windows is not supported** — there's no
+native `bash`, and no PowerShell (`.ps1`) twin is shipped. Windows users would
+need WSL, Git Bash, or a port. (The `/goodnight` and `/goodmorning` skills are
+just instructions to Claude and work anywhere; only the late-night hook and the
+statusline owl are shell-dependent.)
+
 ## How it works
 
 The hook reads the system clock with `date`, so it follows your machine's local
