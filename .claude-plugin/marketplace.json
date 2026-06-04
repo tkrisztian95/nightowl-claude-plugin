@@ -1,5 +1,6 @@
 {
   "name": "nightowl",
+  "description": "Single-plugin marketplace for nightowl — a late-night nudge + /goodnight handoff for Claude Code.",
   "owner": {
     "name": "Krisztian Toth",
     "email": "ktothdev@gmail.com"
