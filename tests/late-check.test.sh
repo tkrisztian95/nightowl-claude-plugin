@@ -117,11 +117,33 @@ run "custom template renders" fire \
 missing_dir="$(fresh_tmp)"
 run "missing template is graceful" silent \
   NIGHTOWL_FAKE_HOUR=2 NIGHTOWL_START=0 NIGHTOWL_END=6 "NIGHTOWL_TEMPLATE=/no/such/file.tmpl" "TMPDIR=$missing_dir"
-# ...and a missing template must not write throttle state.
-if [ -f "$missing_dir/nightowl-last-nag" ]; then
+# ...and a missing template must not write throttle state (keyed by project).
+if compgen -G "$missing_dir/nightowl-last-nag-*" >/dev/null; then
   printf 'FAIL  missing template wrote throttle state\n'; fail=$((fail + 1))
 else
   printf 'ok    missing template leaves no throttle state\n'; pass=$((pass + 1))
+fi
+
+# --- per-project throttle isolation ----------------------------------------
+# Parallel sessions in different project dirs share TMPDIR but must NOT share
+# the nag clock: a nag in project A must not silence a first nag in project B.
+shared_tmp="$(fresh_tmp)"
+proj_a="$(fresh_tmp)"; proj_b="$(fresh_tmp)"
+common_env=(NIGHTOWL_FAKE_HOUR=2 NIGHTOWL_FAKE_NOW=1000 NIGHTOWL_START=0 NIGHTOWL_END=6 "TMPDIR=$shared_tmp")
+out_a="$(cd "$proj_a" && env "${common_env[@]}" bash "$HOOK" </dev/null 2>/dev/null)"
+out_b="$(cd "$proj_b" && env "${common_env[@]}" bash "$HOOK" </dev/null 2>/dev/null)"
+if [ -n "$out_a" ] && [ -n "$out_b" ]; then
+  printf 'ok    different projects nag independently (shared TMPDIR)\n'; pass=$((pass + 1))
+else
+  printf 'FAIL  per-project throttle: A=%s B=%s (expected both fire)\n' \
+    "${out_a:+fire}${out_a:-silent}" "${out_b:+fire}${out_b:-silent}"; fail=$((fail + 1))
+fi
+# Same project, second call within throttle window → silent (state is per-dir).
+out_a2="$(cd "$proj_a" && env "${common_env[@]}" NIGHTOWL_FAKE_NOW=1300 bash "$HOOK" </dev/null 2>/dev/null)"
+if [ -z "$out_a2" ]; then
+  printf 'ok    same project still throttles its own clock\n'; pass=$((pass + 1))
+else
+  printf 'FAIL  same project did not throttle on 2nd call\n'; fail=$((fail + 1))
 fi
 
 # --- summary ---------------------------------------------------------------

@@ -53,8 +53,11 @@ in_window() {
 
 in_window || exit 0
 
-# Throttle via a state file in the OS temp dir.
-state="${TMPDIR:-/tmp}/nightowl-last-nag"
+# Throttle via a state file in the OS temp dir. Key it by the current project
+# directory so parallel Claude sessions in different projects nag on their own
+# clocks instead of sharing one machine-wide timer. cksum is POSIX, no deps.
+proj_key="$(pwd -P | cksum | cut -d' ' -f1)"
+state="${TMPDIR:-/tmp}/nightowl-last-nag-$proj_key"
 if [ -f "$state" ]; then
   last=$(cat "$state" 2>/dev/null || echo 0)
   delta=$(( now - last ))
