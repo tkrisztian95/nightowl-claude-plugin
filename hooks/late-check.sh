@@ -17,6 +17,8 @@ START="${NIGHTOWL_START:-23}"       # window start hour (23 = 11pm)
 END="${NIGHTOWL_END:-6}"            # window end hour, exclusive (06 = 6am)
 THROTTLE_MIN="${NIGHTOWL_THROTTLE_MIN:-30}"   # min minutes between nags
 TEMPLATE="${NIGHTOWL_TEMPLATE:-$SCRIPT_DIR/reminder.tmpl}"  # prompt template
+FIRM_AFTER="${NIGHTOWL_FIRM_AFTER:-2}"     # hours into the night → "firm" tone
+URGENT_AFTER="${NIGHTOWL_URGENT_AFTER:-4}" # hours into the night → "urgent" tone
 # ---------------------------------------------------------------------------
 
 # Minimal template engine: read a template file and replace every {{KEY}}
@@ -63,9 +65,17 @@ fi
 
 clock=$(date +%H:%M)
 
+# Escalate the tone the deeper into the night we are. `hours_into` counts from
+# the window start and wraps midnight, so it works for any custom START.
+hours_into=$(( (hour - START + 24) % 24 ))
+if   [ "$hours_into" -ge "$URGENT_AFTER" ]; then severity=urgent
+elif [ "$hours_into" -ge "$FIRM_AFTER" ];   then severity=firm
+else                                             severity=gentle
+fi
+
 # Render the reminder; only mark the throttle once we have output to show.
 # A missing/unreadable template must never break the user's prompt.
-if rendered=$(render_template "$TEMPLATE" "CLOCK=$clock"); then
+if rendered=$(render_template "$TEMPLATE" "CLOCK=$clock" "SEVERITY=$severity"); then
   echo "$now" > "$state"
   # Anything printed to stdout on exit 0 is injected as context for the turn.
   printf '%s\n' "$rendered"

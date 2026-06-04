@@ -4,15 +4,21 @@ A tiny Claude Code plugin that notices when you're working late at night,
 nudges you to get some sleep, and saves a handoff summary so you can stop now
 and pick up tomorrow without re-discovering everything.
 
-Three pieces:
+Four pieces:
 
 - **`late-check` hook** (`UserPromptSubmit`) — checks the local clock on each
   prompt. Inside the late-night window it injects a one-line reminder telling
-  Claude to gently suggest wrapping up and mention `/goodnight`. Rate-limited so
-  it nags at most once every 30 min.
+  Claude to suggest wrapping up and mention `/goodnight`. The tone escalates the
+  later it gets (gentle → firm → urgent). Rate-limited so it nags at most once
+  every 30 min.
+- **`resume-check` hook** (`SessionStart`) — when a recent `/goodnight` handoff
+  is sitting in `.nightowl/`, injects a one-line pointer so Claude reminds you
+  that you can `/goodmorning` to resume. Surfaces once per handoff, and prunes
+  stale handoffs so the folder doesn't grow forever.
 - **`/goodnight` skill** — writes a dated handoff summary to
-  `.nightowl/handoff-YYYY-MM-DD.md` *and* prints it in chat: what you did, where
-  you left off (file:line), open next steps, gotchas, and the command to resume.
+  `.nightowl/handoff-YYYY-MM-DD-HHMM.md` *and* prints it in chat: what you did,
+  where you left off (file:line), open next steps, gotchas, and the command to
+  resume.
 - **`/goodmorning` skill** — the counterpart: loads the latest handoff,
   re-grounds it against current git state (flagging anything that changed
   overnight), and tees up the next step so you start oriented.
@@ -34,8 +40,11 @@ timezone — no config needed. State for throttling lives in
 your prompt: on any error it exits cleanly and your request goes through.
 
 The `/goodnight` summary is written under `.nightowl/` in the current project
-(git-ignored by default). `/goodmorning` reads the newest `handoff-*.md` back
-out of that folder, so the two commands share one on-disk handoff per day.
+(git-ignored by default), named `handoff-YYYY-MM-DD-HHMM.md` so a second wrap-up
+the same day doesn't clobber the first. `/goodmorning` reads the newest
+`handoff-*.md` back out of that folder. The `resume-check` hook also looks there
+at session start: if the newest handoff is recent it nudges you to
+`/goodmorning`, and it prunes handoffs older than the retention window.
 
 ## Install
 
@@ -67,7 +76,7 @@ cd nightowl-claude-plugin
    cp -r skills/goodmorning ~/.claude/skills/goodmorning
    ```
 
-2. **Hook** — add the hook to `~/.claude/settings.json`, pointing at the
+2. **Hooks** — add both hooks to `~/.claude/settings.json`, pointing at the
    absolute path where you cloned it:
 
    ```json
@@ -79,6 +88,16 @@ cd nightowl-claude-plugin
              {
                "type": "command",
                "command": "bash \"/absolute/path/to/nightowl-claude-plugin/hooks/late-check.sh\""
+             }
+           ]
+         }
+       ],
+       "SessionStart": [
+         {
+           "hooks": [
+             {
+               "type": "command",
+               "command": "bash \"/absolute/path/to/nightowl-claude-plugin/hooks/resume-check.sh\""
              }
            ]
          }
@@ -99,16 +118,27 @@ Override via environment variables (defaults shown):
 | `NIGHTOWL_END` | `6` | Window end hour, exclusive. `6` = 6am. |
 | `NIGHTOWL_THROTTLE_MIN` | `30` | Minimum minutes between nags. |
 | `NIGHTOWL_TEMPLATE` | `hooks/reminder.tmpl` | Path to the reminder template. |
+| `NIGHTOWL_FIRM_AFTER` | `2` | Hours into the night before the nudge turns *firm*. |
+| `NIGHTOWL_URGENT_AFTER` | `4` | Hours into the night before the nudge turns *urgent*. |
+| `NIGHTOWL_RESUME_MAX_AGE_DAYS` | `3` | `resume-check` won't surface a handoff older than this. |
+| `NIGHTOWL_HANDOFF_KEEP_DAYS` | `14` | `resume-check` prunes handoffs older than this. |
 
 Wrap-around windows work: `NIGHTOWL_START=22 NIGHTOWL_END=5` covers 10pm–5am.
+
+**Escalating tone.** The nudge gets firmer the deeper into the night you are,
+measured in hours since `NIGHTOWL_START` (wrapping midnight). With the defaults:
+gentle at 11pm–12:59am, firm from 1am, urgent from 3am. `resume-check` and the
+pruning it does are deterministic and never block the session — on any error it
+exits cleanly.
 
 ## The reminder template
 
 The nudge wording lives in [`hooks/reminder.tmpl`](hooks/reminder.tmpl), not in
 the shell script. The hook renders it with a tiny pure-bash engine that replaces
-`{{KEY}}` placeholders — currently just `{{CLOCK}}` (the local `HH:MM`). Edit the
-template to change the tone; no code change needed. The user's prompt is never
-read into the template, so there's no injection surface beyond the file itself.
+`{{KEY}}` placeholders — `{{CLOCK}}` (the local `HH:MM`) and `{{SEVERITY}}` (the
+escalation tier: `gentle`, `firm`, or `urgent`). Edit the template to change the
+tone; no code change needed. The user's prompt is never read into the template,
+so there's no injection surface beyond the file itself.
 
 ## Statusline owl (optional)
 
@@ -157,8 +187,9 @@ Window vars (`NIGHTOWL_START` / `NIGHTOWL_END`) are shared with the hook.
 Lint and test (only `bash` + `shellcheck` needed — no bats):
 
 ```bash
-shellcheck hooks/late-check.sh statusline/nightowl-statusline.sh tests/*.sh
+shellcheck hooks/late-check.sh hooks/resume-check.sh statusline/nightowl-statusline.sh tests/*.sh
 bash tests/late-check.test.sh
+bash tests/resume-check.test.sh
 bash tests/statusline.test.sh
 ```
 
