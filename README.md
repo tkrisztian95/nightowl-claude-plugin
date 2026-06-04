@@ -17,11 +17,28 @@ Four pieces:
   stale handoffs so the folder doesn't grow forever.
 - **`/goodnight` skill** — writes a dated handoff summary to
   `.nightowl/handoff-YYYY-MM-DD-HHMM.md` *and* prints it in chat: what you did,
-  where you left off (file:line), open next steps, gotchas, and the command to
-  resume.
+  where you left off (file:line), in-flight work (**Cache**), dead ends you
+  already hit (**Pellet**), open next steps, gotchas, and the command to resume.
 - **`/goodmorning` skill** — the counterpart: loads the latest handoff,
   re-grounds it against current git state (flagging anything that changed
-  overnight), and tees up the next step so you start oriented.
+  overnight), recovers the Cache, respects the Pellet, and tees up the next step
+  so you start oriented.
+
+## Owl instincts
+
+The skills aren't just owl-*named* — each step is framed as a real owl capability,
+so the bird is a mnemonic for an actual best-practice. No flavor without value.
+
+| Owl trait | What it does in the skill |
+| --- | --- |
+| 🦉 **Facial disc** (funnels sound to the ears) | `/goodnight` sweeps the whole session and funnels it to signal — distill, don't dump. |
+| 🦉 **Talon grip** (two-forward-two-back crush hold) | The handoff grips exact state so nothing leaks overnight. |
+| 🦉 **Cache** (owls stash uneaten prey) | A handoff section for in-flight work — a stash, a WIP edit, a forgotten branch — that git won't show and you'd silently lose. |
+| 🦉 **Pellet** (owls cough up indigestible bones) | A handoff section for approaches you already tried that *didn't* work — so tomorrow-you doesn't re-chew a dead end. |
+| 🦉 **Silent flight** (prey hears nothing) | `/goodnight` is read-only — it writes one file and disturbs nothing: no commit, no push. |
+| 🦉 **Night vision** (max light in near-dark) | `/goodmorning` reconstructs a full session from one sparse handoff. |
+| 🦉 **270° head swivel** (look behind without moving) | `/goodmorning` scans both ways: drift since the handoff, *and* forward to recover the Cache. |
+| 🦉 **Asymmetric ears** (pinpoint prey in total dark) | The morning brief lands on one exact next move — file:line, not a vague direction. |
 
 ## Requirements
 
