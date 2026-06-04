@@ -54,3 +54,8 @@ day already oriented instead of re-reading their own code.
 - If multiple handoffs exist, mention you loaded the newest and how many older
   ones are sitting in `.nightowl/`.
 - Keep the brief tight. The point is a fast start, not a wall of text.
+- **Called again in the same session?** You've already loaded the handoff —
+  don't re-brief from scratch as if just waking up. Re-ground against the
+  *current* state and give a short delta instead: what's progressed since you
+  resumed, what's still next (or "nothing's changed since"). Treat the repeat as
+  a status check, not a fresh start.

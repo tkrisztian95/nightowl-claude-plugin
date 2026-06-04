@@ -54,3 +54,9 @@ session (or a fresh context) can resume with zero re-discovery.
 - Don't commit, push, or run anything destructive. Just read state and write the file.
 - If `.nightowl/` is not git-ignored and the repo tracks it, mention the user may
   want to add `.nightowl/` to `.gitignore`.
+- **Called again in the same session?** If you already wrote a handoff this
+  session and nothing has changed since, don't duplicate it — say it's already
+  saved and point at the existing file. If state *has* changed (new commits,
+  edits, decisions), write a fresh handoff; the `-HHMM` in the filename keeps it
+  from clobbering the earlier one (same-minute re-runs do overwrite, which is
+  fine — the content is equivalent).
