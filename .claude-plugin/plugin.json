@@ -6,5 +6,15 @@
     "name": "Krisztian Toth",
     "email": "ktothdev@gmail.com"
   },
+  "license": "MIT",
+  "homepage": "https://github.com/tkrisztian95/nightowl-claude-plugin",
+  "repository": "https://github.com/tkrisztian95/nightowl-claude-plugin",
+  "keywords": [
+    "claude-code",
+    "claude-code-plugin",
+    "productivity",
+    "work-life-balance",
+    "developer-tools"
+  ],
   "hooks": "./hooks/hooks.json"
 }

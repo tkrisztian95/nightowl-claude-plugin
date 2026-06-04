@@ -15,9 +15,10 @@ session (or a fresh context) can resume with zero re-discovery.
    `git status --short` and `git log --oneline -5` to ground the summary in real
    state. Don't dump raw output — distill it.
 
-2. **Write the summary file.** Save to `.nightowl/handoff-YYYY-MM-DD.md` in the
-   current project (create `.nightowl/` if missing; use today's date). Use this
-   shape:
+2. **Write the summary file.** Save to `.nightowl/handoff-YYYY-MM-DD-HHMM.md` in
+   the current project (create `.nightowl/` if missing; use today's date and the
+   current time). The `-HHMM` suffix keeps a second wrap-up the same day from
+   clobbering the first, and still sorts newest-last. Use this shape:
 
    ```markdown
    # Handoff — <YYYY-MM-DD HH:MM>

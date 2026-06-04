@@ -12,7 +12,9 @@ day already oriented instead of re-reading their own code.
 ## Steps
 
 1. **Find the latest handoff.** Look in `.nightowl/` in the current project for
-   `handoff-*.md` and pick the newest by filename (dates sort lexically):
+   `handoff-*.md` and pick the newest by filename. Names are
+   `handoff-YYYY-MM-DD-HHMM.md` (the `-HHMM` means a day can hold more than one),
+   and both date and time sort lexically, so the last line is the newest:
 
    ```bash
    ls -1 .nightowl/handoff-*.md 2>/dev/null | sort | tail -1

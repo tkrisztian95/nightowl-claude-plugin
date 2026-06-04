@@ -73,6 +73,38 @@ run "throttle: 5 min later silent" silent \
 run "throttle: 31 min later fires"  fire \
   NIGHTOWL_FAKE_HOUR=2 NIGHTOWL_FAKE_NOW=2861 NIGHTOWL_START=0 NIGHTOWL_END=6 NIGHTOWL_THROTTLE_MIN=30 "TMPDIR=$throttle_dir"
 
+# --- severity tiers --------------------------------------------------------
+# The nudge tone escalates with hours into the night (counted from START).
+# severity <name> <expected-word> <env...> — asserts the rendered "Tone: <word>".
+severity() {
+  local name="$1" want="$2"; shift 2
+  local out rc
+  out="$(env "$@" bash "$HOOK" </dev/null 2>/dev/null)"; rc=$?
+  if [ "$rc" -ne 0 ]; then
+    printf 'FAIL  %s — exit %d\n' "$name" "$rc"; fail=$((fail + 1)); return
+  fi
+  if [[ "$out" == *"Tone: $want"* ]]; then
+    printf 'ok    %s\n' "$name"; pass=$((pass + 1))
+  else
+    printf 'FAIL  %s — expected Tone: %s\n  got: %q\n' "$name" "$want" "$out"
+    fail=$((fail + 1))
+  fi
+}
+
+# Default thresholds (firm>=2, urgent>=4) with START=23 → hours_into wraps midnight.
+severity "gentle at window start (23:00)" gentle NIGHTOWL_FAKE_HOUR=23 "TMPDIR=$(fresh_tmp)"
+severity "gentle one hour in (00:00)"     gentle NIGHTOWL_FAKE_HOUR=0  "TMPDIR=$(fresh_tmp)"
+severity "firm two hours in (01:00)"      firm   NIGHTOWL_FAKE_HOUR=1  "TMPDIR=$(fresh_tmp)"
+severity "firm three hours in (02:00)"    firm   NIGHTOWL_FAKE_HOUR=2  "TMPDIR=$(fresh_tmp)"
+severity "urgent four hours in (03:00)"   urgent NIGHTOWL_FAKE_HOUR=3  "TMPDIR=$(fresh_tmp)"
+severity "urgent deep night (05:00)"      urgent NIGHTOWL_FAKE_HOUR=5  "TMPDIR=$(fresh_tmp)"
+
+# Custom thresholds honored.
+severity "custom firm-after=1 (00:00)" firm \
+  NIGHTOWL_FAKE_HOUR=0 NIGHTOWL_FIRM_AFTER=1 NIGHTOWL_URGENT_AFTER=3 "TMPDIR=$(fresh_tmp)"
+severity "custom urgent-after=3 (02:00)" urgent \
+  NIGHTOWL_FAKE_HOUR=2 NIGHTOWL_FIRM_AFTER=1 NIGHTOWL_URGENT_AFTER=3 "TMPDIR=$(fresh_tmp)"
+
 # --- template handling -----------------------------------------------------
 # Custom template renders its own placeholders.
 custom_dir="$(fresh_tmp)"
