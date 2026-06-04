@@ -17,7 +17,7 @@ payload="$(cat)"
 # --- config (override via env; mirror the hook's window) -------------------
 START="${NIGHTOWL_START:-23}"       # window start hour (23 = 11pm)
 END="${NIGHTOWL_END:-6}"            # window end hour, exclusive (06 = 6am)
-BADGE="${NIGHTOWL_BADGE:-🦉 late night · /goodnight}"
+BADGE="${NIGHTOWL_BADGE:-🦉 late night · /roost}"
 # ---------------------------------------------------------------------------
 
 # Test seam: pin the hour deterministically (unset in normal use).

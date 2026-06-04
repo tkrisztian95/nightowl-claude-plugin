@@ -1,13 +1,13 @@
 ---
-name: goodmorning
-description: Resume where you left off by loading the latest /goodnight handoff. Use when the user types /goodmorning, says good morning, asks to pick up where they stopped, resume yesterday's work, or "what was I doing".
+name: rouse
+description: Rouse from the roost — resume where you left off by loading the latest /roost handoff. Use when the user types /rouse, says good morning, asks to pick up where they stopped, resume yesterday's work, or "what was I doing".
 ---
 
-# /goodmorning — pick up where you left off
+# /rouse — wake up and pick up where you left off
 
-The counterpart to `/goodnight`. Load the most recent handoff, check what (if
-anything) changed overnight, and tee up the next step — so the user starts the day
-already oriented instead of re-reading their own code.
+The counterpart to `/roost`. Load the most recent handoff, check what (if anything)
+changed overnight, and tee up the next step — so the user starts the day already
+oriented instead of re-reading their own code.
 
 Same bird, dawn instincts. Three traits, three steps.
 
@@ -28,7 +28,7 @@ ls -1 .nightowl/handoff-*.md 2>/dev/null | sort | tail -1
 ```
 
 If none exists, say so plainly — "No handoff found in `.nightowl/`. Nothing to
-resume; start `/goodnight` tonight to leave yourself one." — and stop.
+resume; run /roost tonight to leave yourself one." — and stop.
 
 Read it. Pay attention to *Where I left off*, *Cache*, *Pellet*, *Open / next
 steps*, *Gotchas*, and *Resume command*. The **Cache** tells you what in-flight work
@@ -72,6 +72,7 @@ the handoff's *Resume command*). Don't auto-run it — wait for go.
 
 - Read-only orientation. Don't edit, commit, or run anything destructive — just read
   the handoff + git state and report.
+- The counterpart skill is `/roost` — that's what writes the handoff this one reads.
 - If multiple handoffs exist, mention you loaded the newest and how many older ones
   are sitting in `.nightowl/`.
 - Keep the brief tight. The point is a fast start, not a wall of text.

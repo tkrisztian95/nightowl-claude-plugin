@@ -8,18 +8,18 @@ Four pieces:
 
 - **`late-check` hook** (`UserPromptSubmit`) — checks the local clock on each
   prompt. Inside the late-night window it injects a one-line reminder telling
-  Claude to suggest wrapping up and mention `/goodnight`. The tone escalates the
+  Claude to suggest wrapping up and mention `/roost`. The tone escalates the
   later it gets (gentle → firm → urgent). Rate-limited so it nags at most once
   every 30 min.
-- **`resume-check` hook** (`SessionStart`) — when a recent `/goodnight` handoff
+- **`resume-check` hook** (`SessionStart`) — when a recent `/roost` handoff
   is sitting in `.nightowl/`, injects a one-line pointer so Claude reminds you
-  that you can `/goodmorning` to resume. Surfaces once per handoff, and prunes
+  that you can `/rouse` to resume. Surfaces once per handoff, and prunes
   stale handoffs so the folder doesn't grow forever.
-- **`/goodnight` skill** — writes a dated handoff summary to
+- **`/roost` skill** — writes a dated handoff summary to
   `.nightowl/handoff-YYYY-MM-DD-HHMM.md` *and* prints it in chat: what you did,
   where you left off (file:line), in-flight work (**Cache**), dead ends you
   already hit (**Pellet**), open next steps, gotchas, and the command to resume.
-- **`/goodmorning` skill** — the counterpart: loads the latest handoff,
+- **`/rouse` skill** — the counterpart: loads the latest handoff,
   re-grounds it against current git state (flagging anything that changed
   overnight), recovers the Cache, respects the Pellet, and tees up the next step
   so you start oriented.
@@ -31,13 +31,13 @@ so the bird is a mnemonic for an actual best-practice. No flavor without value.
 
 | Owl trait | What it does in the skill |
 | --- | --- |
-| 🦉 **Facial disc** (funnels sound to the ears) | `/goodnight` sweeps the whole session and funnels it to signal — distill, don't dump. |
+| 🦉 **Facial disc** (funnels sound to the ears) | `/roost` sweeps the whole session and funnels it to signal — distill, don't dump. |
 | 🦉 **Talon grip** (two-forward-two-back crush hold) | The handoff grips exact state so nothing leaks overnight. |
 | 🦉 **Cache** (owls stash uneaten prey) | A handoff section for in-flight work — a stash, a WIP edit, a forgotten branch — that git won't show and you'd silently lose. |
 | 🦉 **Pellet** (owls cough up indigestible bones) | A handoff section for approaches you already tried that *didn't* work — so tomorrow-you doesn't re-chew a dead end. |
-| 🦉 **Silent flight** (prey hears nothing) | `/goodnight` is read-only — it writes one file and disturbs nothing: no commit, no push. |
-| 🦉 **Night vision** (max light in near-dark) | `/goodmorning` reconstructs a full session from one sparse handoff. |
-| 🦉 **270° head swivel** (look behind without moving) | `/goodmorning` scans both ways: drift since the handoff, *and* forward to recover the Cache. |
+| 🦉 **Silent flight** (prey hears nothing) | `/roost` is read-only — it writes one file and disturbs nothing: no commit, no push. |
+| 🦉 **Night vision** (max light in near-dark) | `/rouse` reconstructs a full session from one sparse handoff. |
+| 🦉 **270° head swivel** (look behind without moving) | `/rouse` scans both ways: drift since the handoff, *and* forward to recover the Cache. |
 | 🦉 **Asymmetric ears** (pinpoint prey in total dark) | The morning brief lands on one exact next move — file:line, not a vague direction. |
 
 ## Requirements
@@ -45,7 +45,7 @@ so the bird is a mnemonic for an actual best-practice. No flavor without value.
 The hook and statusline are POSIX shell scripts (`bash`), so they run on
 **macOS and Linux** out of the box. **Windows is not supported** — there's no
 native `bash`, and no PowerShell (`.ps1`) twin is shipped. Windows users would
-need WSL, Git Bash, or a port. (The `/goodnight` and `/goodmorning` skills are
+need WSL, Git Bash, or a port. (The `/roost` and `/rouse` skills are
 just instructions to Claude and work anywhere; only the late-night hook and the
 statusline owl are shell-dependent.)
 
@@ -56,12 +56,12 @@ timezone — no config needed. State for throttling lives in
 `$TMPDIR/nightowl-last-nag` (just a timestamp). The hook never blocks or fails
 your prompt: on any error it exits cleanly and your request goes through.
 
-The `/goodnight` summary is written under `.nightowl/` in the current project
+The `/roost` summary is written under `.nightowl/` in the current project
 (git-ignored by default), named `handoff-YYYY-MM-DD-HHMM.md` so a second wrap-up
-the same day doesn't clobber the first. `/goodmorning` reads the newest
+the same day doesn't clobber the first. `/rouse` reads the newest
 `handoff-*.md` back out of that folder. The `resume-check` hook also looks there
 at session start: if the newest handoff is recent it nudges you to
-`/goodmorning`, and it prunes handoffs older than the retention window.
+`/rouse`, and it prunes handoffs older than the retention window.
 
 ## Install
 
@@ -89,8 +89,8 @@ cd nightowl-claude-plugin
 1. **Skills** — copy both skills so Claude can find them:
 
    ```bash
-   cp -r skills/goodnight ~/.claude/skills/goodnight
-   cp -r skills/goodmorning ~/.claude/skills/goodmorning
+   cp -r skills/roost ~/.claude/skills/roost
+   cp -r skills/rouse ~/.claude/skills/rouse
    ```
 
 2. **Hooks** — add both hooks to `~/.claude/settings.json`, pointing at the
@@ -196,7 +196,7 @@ it through. Set `NIGHTOWL_BASE_STATUSLINE` to your existing command and point
 
 The wrapper forwards Claude's session JSON (stdin) to the base command, so your
 existing dashboard renders exactly as before — with the owl in front when late.
-Customize the badge with `NIGHTOWL_BADGE` (default `🦉 late night · /goodnight`).
+Customize the badge with `NIGHTOWL_BADGE` (default `🦉 late night · /roost`).
 Window vars (`NIGHTOWL_START` / `NIGHTOWL_END`) are shared with the hook.
 
 ## Development

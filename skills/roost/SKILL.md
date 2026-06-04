@@ -1,11 +1,11 @@
 ---
-name: goodnight
-description: Save a late-night handoff summary so you can stop now and resume tomorrow. Use when the user types /goodnight, says they're going to bed, wants to wrap up the session, or asks to save progress to continue later.
+name: roost
+description: Settle in for the night — save a handoff summary so you can stop now and resume tomorrow. Use when the user types /roost, says good night, says they're going to bed, wants to wrap up the session, or asks to save progress to continue later.
 ---
 
-# /goodnight — wrap up and save a handoff
+# /roost — settle in and save a handoff
 
-The user is stopping for the night. Hunt the session down to a concise handoff so
+The user is roosting for the night. Hunt the session down to a concise handoff so
 tomorrow's session (or a fresh context) can resume with zero re-discovery.
 
 An owl works the night shift on four instincts. Each one maps to a real step —
@@ -86,6 +86,7 @@ One short, warm line — e.g. "Roosted. Get some rest 🌙".
   state and write the file.
 - If `.nightowl/` is not git-ignored and the repo tracks it, mention the user may
   want to add `.nightowl/` to `.gitignore`.
+- The counterpart skill is `/rouse` — that's what reads this handoff back tomorrow.
 - **Called again in the same session?** If you already wrote a handoff this
   session and nothing has changed since, don't duplicate it — say it's already
   saved and point at the existing file. If state *has* changed (new commits,
