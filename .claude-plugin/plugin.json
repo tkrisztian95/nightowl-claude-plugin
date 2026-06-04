@@ -15,6 +15,5 @@
     "productivity",
     "work-life-balance",
     "developer-tools"
-  ],
-  "hooks": "./hooks/hooks.json"
+  ]
 }
