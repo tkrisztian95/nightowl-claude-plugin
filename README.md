@@ -81,51 +81,11 @@ Update later with `/plugin marketplace update nightowl`.
 
 ### Manual (no marketplace)
 
-Clone the repo somewhere, then wire up the two pieces:
-
-```bash
-git clone https://github.com/tkrisztian95/nightowl-claude-plugin.git
-cd nightowl-claude-plugin
-```
-
-1. **Skills** — copy both skills so Claude can find them:
-
-   ```bash
-   cp -r skills/roost ~/.claude/skills/roost
-   cp -r skills/rouse ~/.claude/skills/rouse
-   ```
-
-2. **Hooks** — add both hooks to `~/.claude/settings.json`, pointing at the
-   absolute path where you cloned it:
-
-   ```json
-   {
-     "hooks": {
-       "UserPromptSubmit": [
-         {
-           "hooks": [
-             {
-               "type": "command",
-               "command": "bash \"/absolute/path/to/nightowl-claude-plugin/hooks/late-check.sh\""
-             }
-           ]
-         }
-       ],
-       "SessionStart": [
-         {
-           "hooks": [
-             {
-               "type": "command",
-               "command": "bash \"/absolute/path/to/nightowl-claude-plugin/hooks/resume-check.sh\""
-             }
-           ]
-         }
-       ]
-     }
-   }
-   ```
-
-Restart Claude Code (or `/hooks` reload) to pick it up.
+Without the marketplace you can clone the repo and wire it up by hand: copy
+`skills/roost` and `skills/rouse` into `~/.claude/skills/`, and replicate
+[`hooks/hooks.json`](hooks/hooks.json) into `~/.claude/settings.json` with
+`${CLAUDE_PLUGIN_ROOT}` swapped for the absolute clone path. The plugin install
+above does all of this for you — prefer it unless you can't use a marketplace.
 
 ## Configuration
 
