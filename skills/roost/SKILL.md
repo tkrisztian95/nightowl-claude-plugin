@@ -13,7 +13,7 @@ the bird is the mnemonic, the behavior is the value.
 
 ## Steps
 
-### 🦉 Facial disc — gather and funnel
+### Facial disc — gather and funnel
 
 An owl's face is a dish that funnels scattered sound to its ears. Do the same with
 the session: sweep up everything that happened and funnel it to signal.
@@ -22,7 +22,7 @@ Skim the task, what got done, what's in progress, what's still open. In a git re
 run `git status --short` and `git log --oneline -5` to ground the summary in real
 state. **Funnel, don't dump** — distill the raw output into a few sharp lines.
 
-### 🦉 Talon grip — capture so nothing slips
+### Talon grip — capture so nothing slips
 
 Two toes forward, two back, a crushing lock. Whatever you caught tonight, grip it
 hard enough that none of it leaks out overnight. Write the handoff to
@@ -67,7 +67,7 @@ The **Cache** and **Pellet** sections are the owl's edge over a plain handoff:
 Cache stops in-flight work from vanishing, Pellet stops tomorrow from repeating a
 dead end. Drop either section if it'd be empty — don't pad.
 
-### 🦉 Silent flight — leave no trace
+### Silent flight — leave no trace
 
 Serrated feathers break the air so prey hears nothing. Your wrap-up should be just
 as quiet: **read state and write the one file, nothing else.** Don't commit, push,

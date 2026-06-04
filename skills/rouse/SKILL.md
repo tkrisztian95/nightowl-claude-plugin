@@ -13,7 +13,7 @@ Same bird, dawn instincts. Three traits, three steps.
 
 ## Steps
 
-### 🦉 Night vision — see from almost nothing
+### Night vision — see from almost nothing
 
 Tube-shaped eyes gather every scrap of light to make a picture in near-dark. Do the
 same: reconstruct a full session from one sparse handoff file.
@@ -35,7 +35,7 @@ steps*, *Gotchas*, and *Resume command*. The **Cache** tells you what in-flight 
 to recover; the **Pellet** tells you which approaches are already dead — don't
 re-attempt them.
 
-### 🦉 270° head swivel — scan back and forward
+### 270° head swivel — scan back and forward
 
 An owl pivots its head most of the way around without moving its body. Use both
 directions:
@@ -56,7 +56,7 @@ directions:
 - **Look forward.** Recover the Cache (is that stash / WIP edit still there?) and
   confirm the Pellet's dead ends are still walls before you point at the next step.
 
-### 🦉 Asymmetric ears — pinpoint the next move
+### Asymmetric ears — pinpoint the next move
 
 Offset ears triangulate prey to an exact spot in total dark. Land the brief on one
 exact next move, not a vague direction. Keep it short, skimmable:
