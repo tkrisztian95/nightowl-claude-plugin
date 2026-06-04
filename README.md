@@ -31,14 +31,14 @@ so the bird is a mnemonic for an actual best-practice. No flavor without value.
 
 | Owl trait | What it does in the skill |
 | --- | --- |
-| 🦉 **Facial disc** (funnels sound to the ears) | `/roost` sweeps the whole session and funnels it to signal — distill, don't dump. |
-| 🦉 **Talon grip** (two-forward-two-back crush hold) | The handoff grips exact state so nothing leaks overnight. |
-| 🦉 **Cache** (owls stash uneaten prey) | A handoff section for in-flight work — a stash, a WIP edit, a forgotten branch — that git won't show and you'd silently lose. |
-| 🦉 **Pellet** (owls cough up indigestible bones) | A handoff section for approaches you already tried that *didn't* work — so tomorrow-you doesn't re-chew a dead end. |
-| 🦉 **Silent flight** (prey hears nothing) | `/roost` is read-only — it writes one file and disturbs nothing: no commit, no push. |
-| 🦉 **Night vision** (max light in near-dark) | `/rouse` reconstructs a full session from one sparse handoff. |
-| 🦉 **270° head swivel** (look behind without moving) | `/rouse` scans both ways: drift since the handoff, *and* forward to recover the Cache. |
-| 🦉 **Asymmetric ears** (pinpoint prey in total dark) | The morning brief lands on one exact next move — file:line, not a vague direction. |
+| 📡 **Facial disc** (funnels sound to the ears) | `/roost` sweeps the whole session and funnels it to signal — distill, don't dump. |
+| ✊ **Talon grip** (two-forward-two-back crush hold) | The handoff grips exact state so nothing leaks overnight. |
+| 📦 **Cache** (owls stash uneaten prey) | A handoff section for in-flight work — a stash, a WIP edit, a forgotten branch — that git won't show and you'd silently lose. |
+| 🦴 **Pellet** (owls cough up indigestible bones) | A handoff section for approaches you already tried that *didn't* work — so tomorrow-you doesn't re-chew a dead end. |
+| 🪶 **Silent flight** (prey hears nothing) | `/roost` is read-only — it writes one file and disturbs nothing: no commit, no push. |
+| 👁️ **Night vision** (max light in near-dark) | `/rouse` reconstructs a full session from one sparse handoff. |
+| 🔄 **270° head swivel** (look behind without moving) | `/rouse` scans both ways: drift since the handoff, *and* forward to recover the Cache. |
+| 🎯 **Asymmetric ears** (pinpoint prey in total dark) | The morning brief lands on one exact next move — file:line, not a vague direction. |
 
 ## Requirements
 
