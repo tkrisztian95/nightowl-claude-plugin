@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # nightowl resume-check hook (SessionStart).
-# If a recent /goodnight handoff is sitting in ./.nightowl, inject a one-line
-# pointer so Claude reminds the user they can /goodmorning to resume. Surfaces
+# If a recent /roost handoff is sitting in ./.nightowl, inject a one-line
+# pointer so Claude reminds the user they can /rouse to resume. Surfaces
 # at most once per handoff (a marker file dedupes repeat sessions). Also prunes
 # stale handoffs so .nightowl/ doesn't grow forever. Never breaks the session.
 
@@ -64,9 +64,9 @@ when="${base:0:10}"
 
 # Anything printed to stdout on exit 0 is injected as context for the session.
 printf '%s\n' "<nightowl-resume>
-A /goodnight handoff from ${when} is waiting in ${DIR}/. Before the user's
+A /roost handoff from ${when} is waiting in ${DIR}/. Before the user's
 first request, add ONE short, friendly line letting them know the handoff
-exists and they can run /goodmorning to resume where they left off. Keep it to
+exists and they can run /rouse to resume where they left off. Keep it to
 a single sentence, then proceed normally. (Shown once per handoff.)
 </nightowl-resume>"
 

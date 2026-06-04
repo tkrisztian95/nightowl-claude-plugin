@@ -23,7 +23,7 @@ assert() {
   fi
 }
 
-OWL="🦉 late night · /goodnight"
+OWL="🦉 late night · /roost"
 
 # Late: owl badge shows (no base configured).
 assert "late shows owl"        "$OWL" NIGHTOWL_FAKE_HOUR=2  NIGHTOWL_START=0 NIGHTOWL_END=6 NIGHTOWL_BASE_STATUSLINE=

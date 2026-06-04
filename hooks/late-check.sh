@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # nightowl late-check hook (UserPromptSubmit).
 # If the local clock is inside the "late night" window, render the reminder
-# template and inject it so Claude suggests wrapping up and offers /goodnight.
+# template and inject it so Claude suggests wrapping up and offers /roost.
 # Throttled so it nags at most once per N minutes.
 
 set -euo pipefail
