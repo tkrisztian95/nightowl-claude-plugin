@@ -53,8 +53,10 @@ statusline owl are shell-dependent.)
 
 The hook reads the system clock with `date`, so it follows your machine's local
 timezone — no config needed. State for throttling lives in
-`$TMPDIR/nightowl-last-nag` (just a timestamp). The hook never blocks or fails
-your prompt: on any error it exits cleanly and your request goes through.
+`$TMPDIR/nightowl-last-nag-<project>` — keyed by the current project directory,
+so parallel Claude sessions in different projects each nag on their own clock
+instead of sharing one machine-wide timer. The hook never blocks or fails your
+prompt: on any error it exits cleanly and your request goes through.
 
 The `/roost` summary is written under `.nightowl/` in the current project
 (git-ignored by default), named `handoff-YYYY-MM-DD-HHMM.md` so a second wrap-up
